@@ -36,11 +36,11 @@ namespace FaceHandsDetection
             this.StopCameraButton = new System.Windows.Forms.Button();
             this.StartCameraButton = new System.Windows.Forms.Button();
             this.CameraPictureBox = new System.Windows.Forms.PictureBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.FileNameTextBox = new System.Windows.Forms.TextBox();
             this.SaveButton = new System.Windows.Forms.Button();
             this.SelectPictureButton = new System.Windows.Forms.Button();
             this.photoPictureBox = new System.Windows.Forms.PictureBox();
-            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -73,7 +73,7 @@ namespace FaceHandsDetection
             this.splitContainer1.Panel2.Controls.Add(this.SaveButton);
             this.splitContainer1.Panel2.Controls.Add(this.SelectPictureButton);
             this.splitContainer1.Panel2.Controls.Add(this.photoPictureBox);
-            this.splitContainer1.Size = new System.Drawing.Size(971, 576);
+            this.splitContainer1.Size = new System.Drawing.Size(971, 525);
             this.splitContainer1.SplitterDistance = 484;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -108,6 +108,7 @@ namespace FaceHandsDetection
             // 
             // StopCameraButton
             // 
+            this.StopCameraButton.Enabled = false;
             this.StopCameraButton.Location = new System.Drawing.Point(368, 473);
             this.StopCameraButton.Name = "StopCameraButton";
             this.StopCameraButton.Size = new System.Drawing.Size(94, 29);
@@ -134,6 +135,15 @@ namespace FaceHandsDetection
             this.CameraPictureBox.Size = new System.Drawing.Size(450, 370);
             this.CameraPictureBox.TabIndex = 0;
             this.CameraPictureBox.TabStop = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(13, 403);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(113, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Name of file to save to";
             // 
             // FileNameTextBox
             // 
@@ -172,20 +182,11 @@ namespace FaceHandsDetection
             this.photoPictureBox.TabIndex = 0;
             this.photoPictureBox.TabStop = false;
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 403);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(113, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Name of file to save to";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(971, 576);
+            this.ClientSize = new System.Drawing.Size(971, 525);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;

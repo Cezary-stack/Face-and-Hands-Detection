@@ -1,69 +1,78 @@
 ﻿using AForge.Video;
 using AForge.Video.DirectShow;
 using System.Drawing;
-using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Threading;
 namespace FaceHandsDetection
 {
     public static class WebCam
     {
         private static FilterInfoCollection VideoCaptureDevices;
-        private static VideoCaptureDevice FinalVideo;
-        private static PictureBox pb1;
-        private static float Brightness;
-        private static volatile bool stop, done;
-        public static void InitWebcam(ref PictureBox x, ref ComboBox y)
+        private static object Lock = new object();
+        public static VideoCaptureDevice FinalVideo;
+        private static Bitmap _NewFrame;
+        private volatile static bool IsRunning=false;
+        public static Bitmap NewFrame
         {
-            pb1 = x;
+            get
+            {
+                lock (Lock)
+                {
+                    return _NewFrame;
+                }
+            }
+            set
+            {
+                lock (Lock)
+                {
+                    _NewFrame = value;
+                }
+            }
+        }
+        private static float Brightness;
+        public static List<string> ReturnCameraList()
+        {
+            List<string> list = new List<string>() ;
             VideoCaptureDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             for (int i = 0; i < VideoCaptureDevices.Count; i++)
             {
-                y.Items.Add(VideoCaptureDevices[i].Name);
+                list.Add(VideoCaptureDevices[i].Name);
             }
+            return list;
         }
         public static void StartCamera(int index)
         {
-            stop = false;
-            done = false;
             Brightness = 1.0f;
             FinalVideo = new VideoCaptureDevice(VideoCaptureDevices[index].MonikerString);
             FinalVideo.NewFrame += new NewFrameEventHandler(FinalVideo_NewFrame);
             FinalVideo.Start();
+            IsRunning = true;
+        }
+        public static bool ReturnCameraState()
+        {
+            return IsRunning;
         }
         public static void SetBrightness(float var)
         {
             Brightness = var;
         }
+        public static Bitmap ReturnNewBitmap()
+        {
+            return NewFrame;
+        }
         private static void FinalVideo_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             var buf = ImageHelper.AdjustBrightness((Bitmap)eventArgs.Frame.Clone(), Brightness);
-            var bmp = Recognize.RecognizeBodyParts(buf);
-            if (stop == false)
-            {
-
-                pb1.BeginInvoke((MethodInvoker)delegate
-                {
-                    pb1.Image = bmp;
-                    pb1.SizeMode = PictureBoxSizeMode.StretchImage;
-                });
-
-            }
-            else
-            {
-                done = true;
-            }
+            NewFrame = Recognize.RecognizeBodyParts(buf);
+            
         }
         public static void StopCamera()
         {
             if (FinalVideo != null)
             {
-                stop = true;
-                while (done == false) ;
+                IsRunning = false;
                 FinalVideo.SignalToStop();
                 FinalVideo.WaitForStop();
-                pb1.BeginInvoke((MethodInvoker)delegate
-                {
-                    pb1.Image = null;
-                });
                 FinalVideo = null;
             }
         }

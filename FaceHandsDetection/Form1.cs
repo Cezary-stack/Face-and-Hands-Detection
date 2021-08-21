@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Forms;
-
+using System.Drawing;
 namespace FaceHandsDetection
 {
     public partial class Form1 : Form
     {
+        private Thread threadCam,threadPhoto;
+        private Semaphore A = new Semaphore(0, 1);
+        private Semaphore B = new Semaphore(0, 1);
+        private bool stop = false;
+        string file;
         public Form1()
         {
             InitializeComponent();
@@ -16,13 +22,78 @@ namespace FaceHandsDetection
             StopCameraButton.Enabled = !a;
             BrightnessTrackbar.Enabled = !a;
         }
+        private void InitThreads()
+        {
+            threadPhoto = new Thread(PhotoThread);
+            threadPhoto.IsBackground = true;
+            threadPhoto.Start();
+            threadCam = new Thread(WebCamThread);
+            threadCam.IsBackground = true;
+            threadCam.Start();
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
             Recognize.InitRecognition();
-            WebCam.InitWebcam(ref this.CameraPictureBox,ref this.CamerasList);
-            StopCameraButton.Enabled = false;
+            InitThreads();
+            CameraPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            photoPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            var CamList = WebCam.ReturnCameraList();
+            foreach(var camera in CamList)
+            {
+                this.CamerasList.Items.Add(camera);
+            }
         }
+        private void EnableFileSave(bool a)
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
+                SelectPictureButton.Enabled = a;
+                SaveButton.Enabled = a;
+            }
 
+            );
+        }
+        private void SetImage(Bitmap bitmap)
+        {
+            if (CameraPictureBox.InvokeRequired)
+            {
+                CameraPictureBox.Invoke((MethodInvoker)delegate
+                {
+                    CameraPictureBox.Image = bitmap;
+                }
+                );
+            }
+            else
+            {
+                CameraPictureBox.Image = bitmap;
+            }
+        }
+        private void PhotoThread()
+        {
+            while(true)
+            {
+                B.WaitOne();
+                photoPictureBox.Invoke((MethodInvoker)delegate
+                {
+                    photoPictureBox.Image = Picture.RecognizeBodyPartsInPicture(file);
+                }
+                );
+                EnableFileSave(true);
+            }
+        }
+        private void WebCamThread()
+        {
+            while(true)
+            {
+                stop = false;
+                A.WaitOne();
+                while(stop==false)
+                {
+                    SetImage(WebCam.ReturnNewBitmap());
+                }
+                SetImage(null);
+            }
+        }
         private void StartCameraButton_Click(object sender, EventArgs e)
         {
             if (CamerasList.SelectedIndex < 0)
@@ -31,16 +102,19 @@ namespace FaceHandsDetection
                 return;
             }
             WebCam.StartCamera(CamerasList.SelectedIndex);
+            A.Release();
             EnableControls(false);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            stop = true;
             WebCam.StopCamera();
         }
 
         private void StopCameraButton_Click(object sender, EventArgs e)
         {
+            stop = true;
             WebCam.StopCamera();
             EnableControls(true);
         }
@@ -55,9 +129,10 @@ namespace FaceHandsDetection
                 openFileDialog.RestoreDirectory = true;
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    SaveButton.Enabled = true;
-                   
-                    Picture.RecognizeBodyPartsInPicture(ref this.photoPictureBox, openFileDialog.FileName);
+                  
+                    file = openFileDialog.FileName;
+                    EnableFileSave(false);
+                    B.Release();
                 }
             }
         }

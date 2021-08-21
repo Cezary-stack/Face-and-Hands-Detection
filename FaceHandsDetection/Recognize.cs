@@ -68,7 +68,6 @@ namespace FaceHandsDetection
         public static Bitmap RecognizeBodyParts(Bitmap bmp)
         {
             var image = BitmapExtension.ToImage<Bgr, byte>(bmp).Resize(450, 370, Inter.Cubic);
-            var grayFrame = image.Convert<Gray, Byte>();
             var blob = DnnInvoke.BlobFromImage(image, 1, new Size(400, 300), new MCvScalar(0, 0, 0), true);
             var faces = RecognizeFace(ref image, ref blob);
             var hands = RecognizeHands(ref image, ref blob);

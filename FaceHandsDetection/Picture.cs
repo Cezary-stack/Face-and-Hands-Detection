@@ -4,13 +4,15 @@ namespace FaceHandsDetection
 {
     public static class Picture
     {
-        public static void RecognizeBodyPartsInPicture(ref PictureBox pb1,string path)
+        public static Bitmap RecognizeBodyPartsInPicture(string path)
         {
+            Bitmap bitmap = null;
             using (var bmp = new Bitmap(path))
             {
-                pb1.Image = Recognize.RecognizeBodyParts(bmp);
-                pb1.SizeMode = PictureBoxSizeMode.StretchImage;
+                bitmap = Recognize.RecognizeBodyParts(bmp);
+             
             }
+            return bitmap;
         }
     }
 }
