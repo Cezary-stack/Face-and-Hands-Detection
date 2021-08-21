@@ -36,10 +36,11 @@ namespace FaceHandsDetection
             this.StopCameraButton = new System.Windows.Forms.Button();
             this.StartCameraButton = new System.Windows.Forms.Button();
             this.CameraPictureBox = new System.Windows.Forms.PictureBox();
+            this.FileNameTextBox = new System.Windows.Forms.TextBox();
+            this.SaveButton = new System.Windows.Forms.Button();
             this.SelectPictureButton = new System.Windows.Forms.Button();
             this.photoPictureBox = new System.Windows.Forms.PictureBox();
-            this.SaveButton = new System.Windows.Forms.Button();
-            this.FileNameTextBox = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -67,6 +68,7 @@ namespace FaceHandsDetection
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.label2);
             this.splitContainer1.Panel2.Controls.Add(this.FileNameTextBox);
             this.splitContainer1.Panel2.Controls.Add(this.SaveButton);
             this.splitContainer1.Panel2.Controls.Add(this.SelectPictureButton);
@@ -133,6 +135,24 @@ namespace FaceHandsDetection
             this.CameraPictureBox.TabIndex = 0;
             this.CameraPictureBox.TabStop = false;
             // 
+            // FileNameTextBox
+            // 
+            this.FileNameTextBox.Location = new System.Drawing.Point(13, 422);
+            this.FileNameTextBox.Name = "FileNameTextBox";
+            this.FileNameTextBox.Size = new System.Drawing.Size(205, 20);
+            this.FileNameTextBox.TabIndex = 4;
+            // 
+            // SaveButton
+            // 
+            this.SaveButton.Enabled = false;
+            this.SaveButton.Location = new System.Drawing.Point(356, 472);
+            this.SaveButton.Name = "SaveButton";
+            this.SaveButton.Size = new System.Drawing.Size(107, 29);
+            this.SaveButton.TabIndex = 2;
+            this.SaveButton.Text = "Save";
+            this.SaveButton.UseVisualStyleBackColor = true;
+            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
+            // 
             // SelectPictureButton
             // 
             this.SelectPictureButton.Location = new System.Drawing.Point(13, 472);
@@ -152,23 +172,14 @@ namespace FaceHandsDetection
             this.photoPictureBox.TabIndex = 0;
             this.photoPictureBox.TabStop = false;
             // 
-            // SaveButton
+            // label2
             // 
-            this.SaveButton.Enabled = false;
-            this.SaveButton.Location = new System.Drawing.Point(356, 472);
-            this.SaveButton.Name = "SaveButton";
-            this.SaveButton.Size = new System.Drawing.Size(107, 29);
-            this.SaveButton.TabIndex = 2;
-            this.SaveButton.Text = "Save";
-            this.SaveButton.UseVisualStyleBackColor = true;
-            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
-            // 
-            // FileNameTextBox
-            // 
-            this.FileNameTextBox.Location = new System.Drawing.Point(13, 422);
-            this.FileNameTextBox.Name = "FileNameTextBox";
-            this.FileNameTextBox.Size = new System.Drawing.Size(205, 20);
-            this.FileNameTextBox.TabIndex = 4;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(13, 403);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(113, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Name of file to save to";
             // 
             // Form1
             // 
@@ -208,6 +219,7 @@ namespace FaceHandsDetection
         private System.Windows.Forms.ComboBox CamerasList;
         private System.Windows.Forms.Button SaveButton;
         private System.Windows.Forms.TextBox FileNameTextBox;
+        private System.Windows.Forms.Label label2;
     }
 }
 
