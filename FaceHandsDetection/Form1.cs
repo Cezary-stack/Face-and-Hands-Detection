@@ -7,8 +7,8 @@ namespace FaceHandsDetection
     public partial class Form1 : Form
     {
         private Thread threadCam,threadPhoto;
-        private Semaphore A = new Semaphore(0, 1);
-        private Semaphore B = new Semaphore(0, 1);
+        ManualResetEvent A = new ManualResetEvent(false);
+        ManualResetEvent B = new ManualResetEvent(false);
         private bool stop = false;
         string file;
         public Form1()
@@ -73,6 +73,7 @@ namespace FaceHandsDetection
             while(true)
             {
                 B.WaitOne();
+                B.Reset();
                 photoPictureBox.Invoke((MethodInvoker)delegate
                 {
                     photoPictureBox.Image = Picture.RecognizeBodyPartsInPicture(file);
@@ -87,6 +88,7 @@ namespace FaceHandsDetection
             {
                 stop = false;
                 A.WaitOne();
+                A.Reset();
                 while(stop==false)
                 {
                     SetImage(WebCam.ReturnNewBitmap());
@@ -102,7 +104,7 @@ namespace FaceHandsDetection
                 return;
             }
             WebCam.StartCamera(CamerasList.SelectedIndex);
-            A.Release();
+            A.Set();
             EnableControls(false);
         }
 
@@ -132,7 +134,7 @@ namespace FaceHandsDetection
                   
                     file = openFileDialog.FileName;
                     EnableFileSave(false);
-                    B.Release();
+                    B.Set();
                 }
             }
         }
